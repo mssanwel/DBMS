@@ -18,7 +18,7 @@ current_name=""
 current=[]
 savings=[]
 trans_details=[]
-inputAccNum=''
+inputAccNum=""
 # Welcome Message
 def first_frame(window):
 
@@ -55,7 +55,7 @@ def second_frame(window, trans_details):
 
     acc_search = tk.Label(search_label, text="Search", fg="blue")
     acc_search.pack(side=tk.LEFT, fill=tk.Y, pady=(0,10))
-    acc_search.bind("<Button-1>", lambda e: call_third())
+    acc_search.bind("<Button-1>", lambda e: call_third(inputAccNum))
     #print("------------------------->>>>>")
     search_label.grid(row=1,columnspan=2)
 
@@ -478,9 +478,9 @@ while True:
                     #######################
                     ####################### Transaction details
                     #######################
-                    
-                    #print("----------------------------------->")
-                    #print(inputAccNum)
+
+                    print(">----------------------------------->")
+                    print(inputAccNum)
                     #print("The transaction details are: ", trans_details)
 
                     # for a given account number (frontend) implementing searching based on Month
