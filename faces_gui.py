@@ -20,6 +20,8 @@ current=[]
 savings=[]
 trans_details=[]
 inputAccNum = None
+current_time=None
+date=None
 # Welcome Message
 def first_frame(window):
 
@@ -29,6 +31,8 @@ def first_frame(window):
     welcome_display = tk.Text(top_frame, height=7, width=31, font = "Helvetica 13")
     welcome_display.pack(side=tk.TOP, fill=tk.Y, padx=(0, 0), pady=(5, 5))
     welcome_display.insert(tk.END, "Hello " + current_name + '\n' )
+    welcome_display.insert(tk.END, "Login Date: " + str(date).split()[0] + '\n' )
+    welcome_display.insert(tk.END, "Login Time: " + str(current_time) + '\n\n' )
     welcome_display.insert(tk.END, "Welcome to the iKYC System!" + '\n' + "Please find your account details below" + '\n')
     # welcome_display.insert(tk.END, "Your login time: " + current_time)
     welcome_display.config(background="cyan", highlightbackground="grey")
@@ -122,15 +126,7 @@ id_search = tk.Label(search_label2, text="ID Search", fg="blue", cursor="hand2")
 
 id_search.bind("<Button-1>", lambda e: trans_detail_call(id_entry.get()))
 
-def check(val):
-        if val == '':
-            data = trans_details
-        else:
-            data = []
-            for item in trans_details:
-                if val in item:
-                    data.append(item)
-        update(data)
+
 
 amt_entry = tk.Entry(search_label2, font="Helvetica 13")
 
@@ -140,7 +136,7 @@ amt_search.tag_configure("center", justify='center')
 amt_search.tag_add("center","1.0","end")
 amt_search.config(background="#F0F0F0")
 
-amt_entry.bind("<KeyRelease>", lambda e: check(amt_entry.get()))
+
 
 date_entry = tk.Entry(search_label2, font="Helvetica 13")
 
@@ -152,7 +148,6 @@ date_search.tag_add("center","1.0","end")
 
 date_search.config(background="#F0F0F0")
 
-date_entry.bind("<KeyRelease>", lambda e: check(date_entry.get()))
 
 time_entry = tk.Entry(search_label2, font="Helvetica 13")
 
@@ -164,7 +159,7 @@ time_search.tag_add("center","1.0","end")
 
 time_search.config(background="#F0F0F0")
 
-time_entry.bind("<KeyRelease>", lambda e: check(time_entry.get()))
+
 
 def third_frame(window, trans_details):
     id_entry.pack()
@@ -175,17 +170,44 @@ def third_frame(window, trans_details):
     date_search.pack(side=tk.TOP, fill=tk.Y, padx=(1, 1), pady=(0, 1))
     time_entry.pack()
     time_search.pack(side=tk.TOP, fill=tk.Y, padx=(1, 1), pady=(0, 1))
-    
-    
-
-    
-    
+    global trans_id_data
     
     def update(data):
         transactions.delete(0,END)
+        print("^^^^")
+        print(data)
         for item in data:
-            transactions.insert(END,item)
+            transactions.insert(END,"Trans_ID -> " +str(item)+ '\n' )
 
+    def check():
+        global trans_id_data
+        val1=amt_entry.get()
+        val3=date_entry.get()
+        val2=time_entry.get()
+        val4=id_entry.get()
+        if val1 == '' and val2 == '' and val3 == '':
+            data = trans_id_data
+        else:
+            data = []
+            for item in trans_details:
+                #for tupleV in item:
+                tupleV=item
+                print((val1=="" or str(tupleV[5])==str(val1)))
+                if (val1=="" or str(tupleV[5])==str(val1)) and (val2=="" or str(tupleV[3])==str(val2)) and (val3=="" or str(tupleV[4])==str(val3)) and (val4=="" or str(tupleV[2])==str(val4)): 
+                    data.append(item)
+                    # break
+            print(">>>>>>>")
+            print(data)
+            print(val)
+            temp=[]
+            for i in data:
+                temp.append(i[2])
+            trans_id_data=temp
+            print("@@@@@@")
+            print(trans_id_data)
+        update(trans_id_data)
+    
+    
     
 
     def home():
@@ -197,11 +219,13 @@ def third_frame(window, trans_details):
 
     first_frame(window)
 
+   
     
+    # amt_entry.bind("<KeyRelease>", lambda e: check1(amt_entry.get()))
+    
+    # date_entry.bind("<KeyRelease>", lambda e: check2(date_entry.get()))
 
-    
-
-    
+    # time_entry.bind("<KeyRelease>", lambda e: check3(time_entry.get()))
 
     
     
@@ -215,13 +239,16 @@ def third_frame(window, trans_details):
     transactions.config(background="DarkOliveGreen1", highlightbackground="grey")
     bottom_frame.grid(row=3, columnspan=3)
     
+    
+    # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    # print(trans_details)
+    #update(trans_id_data)
+
+
     trans_id_data=[]
     for i in trans_details:
         trans_id_data.append(i[2])
-    # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    # print(trans_details)
-    update(trans_id_data)
-
+    check()
     # list_of_trans = ["1234","3456","5678","8910","2234"]
     # update(list_of_trans)
 
@@ -257,11 +284,11 @@ def trans_detail(window, trans_valD):
     account_display.pack(side=tk.TOP, fill=tk.Y, padx=(5, 5), pady=(0, 5))
     account_display.insert(tk.END, "Detail of Transaction entered" + '\n' )
     for i in trans_valD:
-        account_display.insert(tk.END, "To " + str(i[0])+',' )
-        account_display.insert(tk.END, "From " + str(i[1])+ ',' )
-        account_display.insert(tk.END, "Trans_ID " +str(i[2])+ ',' )
-        account_display.insert(tk.END, "Time " +str(i[3])+ ',' )
-        account_display.insert(tk.END, "Date " +str(i[4])+ ',' )
+        account_display.insert(tk.END, "To " + str(i[0])+'\n' )
+        account_display.insert(tk.END, "From " + str(i[1])+ '\n' )
+        account_display.insert(tk.END, "Trans_ID " +str(i[2])+ '\n' )
+        account_display.insert(tk.END, "Time " +str(i[3])+ '\n' )
+        account_display.insert(tk.END, "Date " +str(i[4])+ '\n' )
         account_display.insert(tk.END, "Amount " +str(i[5])+ '\n' )
     account_display.config(background="DarkOliveGreen1", highlightbackground="grey")
 
@@ -417,7 +444,7 @@ while True:
                 ####################### Say Hello
                 #######################
 
-                hello = ("Hello ", current_name, "Welcome to the iKYC System")
+                hello = ("Hello ", current_name, "Welcome to the iKYC System \nLogin Time: ", current_time, "\nLogin Date: ", date)
                 #print(hello)
                 engine.say(hello)
                 first_frame(window)
