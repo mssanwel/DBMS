@@ -42,8 +42,8 @@ def call_third(acc_entry):
         global thirdWindow
         global inputAccNum
         inputAccNum = acc_entry.get()
-        print("----------------------------------->>>")
-        print(inputAccNum)
+        #print("----------------------------------->>>")
+        #print(inputAccNum)
         #window.withdraw()
         third_frame(third_window, trans_details)
         thirdWindow=True
@@ -114,8 +114,8 @@ def trans_detail_call(id_val):
         #window.destroy()
         global trans_id_sel
         trans_id_sel=id_val
-        print(">_>_>_>_>_>_>_>_>_>_>")
-        print(trans_det_val)
+        #print(">_>_>_>_>_>_>_>_>_>_>")
+        #print(trans_det_val)
         trans_detail(trans_window, trans_det_val)
         transWindow=True
 
@@ -175,8 +175,8 @@ def third_frame(window, trans_details):
     
     def update(data):
         transactions.delete(0,END)
-        print("^^^^")
-        print(data)
+        #print("^^^^")
+        #print(data)
         for item in data:
             transactions.insert(END,"Trans_ID -> " +str(item)+ '\n' )
 
@@ -193,19 +193,19 @@ def third_frame(window, trans_details):
             for item in trans_details:
                 #for tupleV in item:
                 tupleV=item
-                print((val1=="" or str(tupleV[5])==str(val1)))
+                #print((val1=="" or str(tupleV[5])==str(val1)))
                 if (val1=="" or str(tupleV[5])==str(val1)) and (val2=="" or str(tupleV[3])==str(val2)) and (val3=="" or str(tupleV[4])==str(val3)) and (val4=="" or str(tupleV[2])==str(val4)): 
                     data.append(item)
                     # break
-            print(">>>>>>>")
-            print(data)
-            print(val)
+            #print(">>>>>>>")
+            #print(data)
+            #print(val)
             temp=[]
             for i in data:
                 temp.append(i[2])
             trans_id_data=temp
-            print("@@@@@@")
-            print(trans_id_data)
+            #print("@@@@@@")
+            #print(trans_id_data)
         update(trans_id_data)
     
     
@@ -268,7 +268,7 @@ def third_frame(window, trans_details):
     
     
 def trans_detail(window, trans_valD):
-    print("_______>>>>>__________>>>>>>>>_______>>>>>>>>>")
+    #print("_______>>>>>__________>>>>>>>>_______>>>>>>>>>")
     def previous():
         global transWindow
         transWindow = False
@@ -279,7 +279,7 @@ def trans_detail(window, trans_valD):
     first_frame(window)
     
     #i=('A10001', 'A10002', 10, datetime.timedelta(seconds=65175), datetime.date(2021, 9, 1), 1000)
-    print(trans_valD)
+    #print(trans_valD)
     middle_frame = tk.Frame(window)
     account_display = tk.Text(middle_frame, height=14, width=61, font = "Helvetica 13")
     account_display.pack(side=tk.TOP, fill=tk.Y, padx=(5, 5), pady=(0, 5))
@@ -558,7 +558,7 @@ while True:
                     ####################### Transaction details
                     #######################
 
-                    print(">----------------------------------->")
+                    #print(">----------------------------------->")
                     #print(inputAccNum)
                     #print("The transaction details are: ", trans_details)
 
