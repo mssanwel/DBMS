@@ -1,3 +1,4 @@
+from os import truncate
 import urllib
 import numpy as np
 import mysql.connector
@@ -18,7 +19,7 @@ current_name=""
 current=[]
 savings=[]
 trans_details=[]
-inputAccNum=""
+inputAccNum = None
 # Welcome Message
 def first_frame(window):
 
@@ -33,29 +34,38 @@ def first_frame(window):
     welcome_display.config(background="cyan", highlightbackground="grey")
 
 
+def call_third(acc_entry):
+        global thirdWindow
+        global inputAccNum
+        inputAccNum = acc_entry.get()
+        print("----------------------------------->>>")
+        print(inputAccNum)
+        #window.withdraw()
+        third_frame(third_window, trans_details)
+        thirdWindow=True
+        
+thirdWindow=False
+third_window = tk.Tk()
+search_label = tk.Frame(window)
+acc_entry = tk.Entry(search_label)
+acc_entry.pack()
+acc_search = tk.Label(search_label, text="Search", fg="blue")
+acc_search.pack(side=tk.LEFT, fill=tk.Y, pady=(0,10))
+acc_search.bind("<Button-1>", lambda e: call_third(acc_entry))
 def second_frame(window, trans_details):
     #Second frame
     # def unhide():
     #     window.deiconify()
 
-    def call_third():
-        inputAccNum = acc_entry.get()
-        print("----------------------------------->>>")
-        print(inputAccNum)
-        #window.withdraw()
-        new_window = tk.Tk()
-        third_frame(new_window, trans_details)
+    
     
     first_frame(window)
 
-    search_label = tk.Frame(window)
+    
 
-    acc_entry = tk.Entry(search_label, font="Helvetica 13")
-    acc_entry.pack()
+    
 
-    acc_search = tk.Label(search_label, text="Search", fg="blue")
-    acc_search.pack(side=tk.LEFT, fill=tk.Y, pady=(0,10))
-    acc_search.bind("<Button-1>", lambda e: call_third(inputAccNum))
+    
     #print("------------------------->>>>>")
     search_label.grid(row=1,columnspan=2)
 
@@ -89,15 +99,30 @@ def second_frame(window, trans_details):
 
     button_frame.grid(row=3, columnspan=3)
 
+trans_window = tk.Tk()
+transWindow=False
+trans_id_sel=None
+trans_det_val=None
 
-def third_frame(window, trans_details):
+###
+def trans_detail_call(id_val):
+        #window.destroy()
+        global trans_id_sel
+        trans_id_sel=id_val
+        print(">_>_>_>_>_>_>_>_>_>_>")
+        print(trans_det_val)
+        trans_detail(trans_window, trans_det_val)
+        transWindow=True
 
-    def update(data):
-        transactions.delete(0,END)
-        for item in data:
-            transactions.insert(END,item)
+search_label2 = tk.Frame(third_window)
+search_label2.grid(row=1,columnspan=1)
+id_entry = tk.Entry(search_label2, font="Helvetica 13")
 
-    def check(val):
+id_search = tk.Label(search_label2, text="ID Search", fg="blue", cursor="hand2")
+
+id_search.bind("<Button-1>", lambda e: trans_detail_call(id_entry.get()))
+
+def check(val):
         if val == '':
             data = trans_details
         else:
@@ -107,61 +132,82 @@ def third_frame(window, trans_details):
                     data.append(item)
         update(data)
 
+amt_entry = tk.Entry(search_label2, font="Helvetica 13")
+
+amt_search = tk.Text(search_label2,height = 1, width = 61, font="Helvetica 13")
+amt_search.insert("1.0", "Amount")
+amt_search.tag_configure("center", justify='center')
+amt_search.tag_add("center","1.0","end")
+amt_search.config(background="#F0F0F0")
+
+amt_entry.bind("<KeyRelease>", lambda e: check(amt_entry.get()))
+
+date_entry = tk.Entry(search_label2, font="Helvetica 13")
+
+
+date_search = tk.Text(search_label2,height = 1, width = 61, font="Helvetica 13")
+date_search.insert("1.0", "Date (ddmmyy)")
+date_search.tag_configure("center", justify='center')
+date_search.tag_add("center","1.0","end")
+
+date_search.config(background="#F0F0F0")
+
+date_entry.bind("<KeyRelease>", lambda e: check(date_entry.get()))
+
+time_entry = tk.Entry(search_label2, font="Helvetica 13")
+
+
+time_search = tk.Text(search_label2,height = 1, width = 61, font="Helvetica 13")
+time_search.insert("1.0", "Time (hrsminsec)")
+time_search.tag_configure("center", justify='center')
+time_search.tag_add("center","1.0","end")
+
+time_search.config(background="#F0F0F0")
+
+time_entry.bind("<KeyRelease>", lambda e: check(time_entry.get()))
+
+def third_frame(window, trans_details):
+    id_entry.pack()
+    id_search.pack(side=tk.TOP, fill=tk.Y, padx=(10,10), pady=(0,5))
+    amt_entry.pack()
+    amt_search.pack(side=tk.TOP, fill=tk.Y, padx=(1, 1), pady=(0, 1))
+    date_entry.pack()
+    date_search.pack(side=tk.TOP, fill=tk.Y, padx=(1, 1), pady=(0, 1))
+    time_entry.pack()
+    time_search.pack(side=tk.TOP, fill=tk.Y, padx=(1, 1), pady=(0, 1))
+    
+    
+
+    
+    
+    
+    def update(data):
+        transactions.delete(0,END)
+        for item in data:
+            transactions.insert(END,item)
+
+    
+
     def home():
+        global thirdWindow
+        thirdWindow = False
         window.destroy()
 
-    def trans_detail_call(id_val):
-        #window.destroy()
-        new_window = tk.Tk()
-        trans_detail(new_window, id_val, trans_details)
+    
 
     first_frame(window)
 
-    search_label = tk.Frame(window)
-    search_label.grid(row=1,columnspan=1)
+    
 
-    amt_entry = tk.Entry(search_label, font="Helvetica 13")
-    amt_entry.pack()
+    
 
-    date_search = tk.Text(search_label,height = 1, width = 61, font="Helvetica 13")
-    date_search.insert("1.0", "Amount")
-    date_search.tag_configure("center", justify='center')
-    date_search.tag_add("center","1.0","end")
-    date_search.pack(side=tk.TOP, fill=tk.Y, padx=(1, 1), pady=(0, 1))
-    date_search.config(background="#F0F0F0")
+    
 
-    amt_entry.bind("<KeyRelease>", lambda e: check(amt_entry.get()))
+    
+    
 
-    date_entry = tk.Entry(search_label, font="Helvetica 13")
-    date_entry.pack()
-
-    date_search = tk.Text(search_label,height = 1, width = 61, font="Helvetica 13")
-    date_search.insert("1.0", "Date (ddmmyy)")
-    date_search.tag_configure("center", justify='center')
-    date_search.tag_add("center","1.0","end")
-    date_search.pack(side=tk.TOP, fill=tk.Y, padx=(1, 1), pady=(0, 1))
-    date_search.config(background="#F0F0F0")
-
-    date_entry.bind("<KeyRelease>", lambda e: check(date_entry.get()))
-
-    time_entry = tk.Entry(search_label, font="Helvetica 13")
-    time_entry.pack()
-
-    time_search = tk.Text(search_label,height = 1, width = 61, font="Helvetica 13")
-    time_search.insert("1.0", "Time (hrsminsec)")
-    time_search.tag_configure("center", justify='center')
-    time_search.tag_add("center","1.0","end")
-    time_search.pack(side=tk.TOP, fill=tk.Y, padx=(1, 1), pady=(0, 1))
-    time_search.config(background="#F0F0F0")
-
-    time_entry.bind("<KeyRelease>", lambda e: check(time_entry.get()))
-
-    id_entry = tk.Entry(search_label, font="Helvetica 13")
-    id_entry.pack()
-
-    id_search = tk.Label(search_label, text="ID Search", fg="blue", cursor="hand2")
-    id_search.pack(side=tk.TOP, fill=tk.Y, padx=(10,10), pady=(0,5))
-    id_search.bind("<Button-1>", lambda e: trans_detail_call(id_entry.get()))
+    
+   
 
     bottom_frame = tk.Frame(window)
     transactions = tk.Listbox(bottom_frame, height = 14, width = 61, font = "Helvetica 13")
@@ -172,8 +218,8 @@ def third_frame(window, trans_details):
     trans_id_data=[]
     for i in trans_details:
         trans_id_data.append(i[2])
-    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    #print(trans_details)
+    # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    # print(trans_details)
     update(trans_id_data)
 
     # list_of_trans = ["1234","3456","5678","8910","2234"]
@@ -193,9 +239,11 @@ def third_frame(window, trans_details):
     logout_button.bind("<Button-1>", lambda e: logout())
     
     
-def trans_detail(window, id_val, i):
+def trans_detail(window, trans_valD):
     print("_______>>>>>__________>>>>>>>>_______>>>>>>>>>")
     def previous():
+        global transWindow
+        transWindow = False
         window.destroy()
         # new_window = tk.Tk()
         # third_frame(new_window, id_val)
@@ -203,17 +251,18 @@ def trans_detail(window, id_val, i):
     first_frame(window)
     
     #i=('A10001', 'A10002', 10, datetime.timedelta(seconds=65175), datetime.date(2021, 9, 1), 1000)
-    print(i)
+    print(trans_valD)
     middle_frame = tk.Frame(window)
     account_display = tk.Text(middle_frame, height=14, width=61, font = "Helvetica 13")
     account_display.pack(side=tk.TOP, fill=tk.Y, padx=(5, 5), pady=(0, 5))
     account_display.insert(tk.END, "Detail of Transaction entered" + '\n' )
-    account_display.insert(tk.END, "To " + str(i[0][0])+',' )
-    account_display.insert(tk.END, "From " + str(i[0][1])+ ',' )
-    account_display.insert(tk.END, "Trans_ID " +str(i[0][2])+ ',' )
-    account_display.insert(tk.END, "Time " +str(i[0][3])+ ',' )
-    account_display.insert(tk.END, "Date " +str(i[0][4])+ ',' )
-    account_display.insert(tk.END, "Amount " +str(i[0][5])+ '\n' )
+    for i in trans_valD:
+        account_display.insert(tk.END, "To " + str(i[0])+',' )
+        account_display.insert(tk.END, "From " + str(i[1])+ ',' )
+        account_display.insert(tk.END, "Trans_ID " +str(i[2])+ ',' )
+        account_display.insert(tk.END, "Time " +str(i[3])+ ',' )
+        account_display.insert(tk.END, "Date " +str(i[4])+ ',' )
+        account_display.insert(tk.END, "Amount " +str(i[5])+ '\n' )
     account_display.config(background="DarkOliveGreen1", highlightbackground="grey")
 
     middle_frame.grid(row=1, columnspan=2)
@@ -289,6 +338,7 @@ gui_confidence = args["confidence"]
 win_started = False
 
 # 4 Open the camera and start face recognition
+access=False
 while True:
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -302,7 +352,8 @@ while True:
         id_, conf = recognizer.predict(roi_gray)
 
         # 4.1 If the face is recognized
-        if conf >= gui_confidence:
+        if conf >= gui_confidence or access:
+            access=True
             # print(id_)
             # print(labels[id_])
             font = cv2.QT_FONT_NORMAL
@@ -466,8 +517,8 @@ while True:
                     WHERE A.account_num =%s AND (A.account_num=T.to OR A.account_num=T.from)
                     """
 
-                    val = ('A10001' ,)
-                    #val = (inputAccNum ,)
+                    #val = ('A10001' ,)
+                    val = (inputAccNum ,)
                     cursor.execute(select, val)
                    
                     trans_details = cursor.fetchall()
@@ -480,11 +531,30 @@ while True:
                     #######################
 
                     print(">----------------------------------->")
-                    print(inputAccNum)
+                    #print(inputAccNum)
                     #print("The transaction details are: ", trans_details)
 
                     # for a given account number (frontend) implementing searching based on Month
                     
+                    select = """
+                    SELECT T.to, T.from, T.trans_id, T.time, T.date, T.amount
+                    FROM Transaction T, Account A
+                    WHERE A.account_num=%s AND (A.account_num=T.to OR A.account_num=T.from) AND T.trans_id=%s
+                    """
+
+                    val = (inputAccNum, trans_id_sel,)
+                    cursor.execute(select, val)
+                    trans_det_val = cursor.fetchall()
+                    # print(">_>_>_>_>_>_>_>_>_>_>")
+                    # print(trans_det_val)
+                    # to be displayed by frotnend
+                    #also convert seconds to time when displaying on frontend
+                    
+                    #######################
+                    ####################### Transaction details by transID
+                    #######################
+
+
 
                     select = """
                     SELECT T.to, T.from, T.trans_id, T.time, T.date, T.amount
@@ -573,6 +643,10 @@ while True:
                     #print("Sorted by amount details are: ", trans_byamount)
 
                 second_frame(window, trans_details)
+                if thirdWindow:
+                    third_frame(third_window, trans_details)
+                if transWindow:
+                    trans_detail(trans_window, trans_det_val)
                 #print("------------------------->>>>>")
                 
 
