@@ -53,7 +53,7 @@ third_window = tk.Tk()
 search_label = tk.Frame(window)
 acc_entry = tk.Entry(search_label)
 acc_entry.pack()
-acc_search = tk.Label(search_label, text="Search", fg="blue")
+acc_search = tk.Label(search_label, text="Search Account Number", fg="blue")
 acc_search.pack(side=tk.LEFT, fill=tk.Y, pady=(0,10))
 acc_search.bind("<Button-1>", lambda e: call_third(acc_entry))
 def second_frame(window, trans_details):
@@ -83,6 +83,7 @@ def second_frame(window, trans_details):
         account_display.insert(tk.END, "-> Account Number: " + str(acc[0]) + '\n')
         account_display.insert(tk.END, "-> Balance: " + str(acc[1]) + '\n')
         account_display.insert(tk.END, "-> Currency: " + str(acc[2]) +  '\n')
+        account_display.insert(tk.END, "-> Interest Rate: " + str(acc[3]) +'%'+  '\n')
     
     for acc in current:
         account_display.insert(tk.END,'\n' + '\n' + "Current Account" + '\n')
@@ -122,7 +123,7 @@ search_label2 = tk.Frame(third_window)
 search_label2.grid(row=1,columnspan=1)
 id_entry = tk.Entry(search_label2, font="Helvetica 13")
 
-id_search = tk.Label(search_label2, text="ID Search", fg="blue", cursor="hand2")
+id_search = tk.Label(search_label2, text="Transaction ID Search", fg="blue", cursor="hand2")
 
 id_search.bind("<Button-1>", lambda e: trans_detail_call(id_entry.get()))
 
@@ -142,7 +143,7 @@ date_entry = tk.Entry(search_label2, font="Helvetica 13")
 
 
 date_search = tk.Text(search_label2,height = 1, width = 61, font="Helvetica 13")
-date_search.insert("1.0", "Date (ddmmyy)")
+date_search.insert("1.0", "Date (yyyy-mm-dd)")
 date_search.tag_configure("center", justify='center')
 date_search.tag_add("center","1.0","end")
 
@@ -524,7 +525,7 @@ while True:
 
                         #print("savings account data is: ")
                         #print(account_data)
-                        savings.append([account_num[0], account_data[0][0], account_data[0][1]])
+                        savings.append([account_num[0], account_data[0][0], account_data[0][1], account_data[0][2]])
 
 
 
